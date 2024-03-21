@@ -13,8 +13,9 @@
 ✅  5.0 dodać konfigurację docker-compose
 
 
-Kod: 
-Demo: 
+Kod: https://github.com/w757/E-biznes/tree/main/Zadanie%201%20-%20Docker
+
+Demo: https://drive.google.com/file/d/1W7h3DLzefbYcCgquvT--Xw-_n-OsAsGs/view?usp=sharing
 
 
 
@@ -32,4 +33,5 @@ Demo:
 5.0 Należy dodać konfigurację CORS dla dwóch hostów dla metod CRUD
 
 Kod: 
+
 Demo: 
