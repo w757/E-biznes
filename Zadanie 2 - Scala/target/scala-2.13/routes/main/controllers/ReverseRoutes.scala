@@ -7,23 +7,8 @@ import play.api.mvc.Call
 import _root_.controllers.Assets.Asset
 import _root_.play.libs.F
 
-// @LINE:6
+// @LINE:9
 package controllers {
-
-  // @LINE:6
-  class ReverseHomeController(_prefix: => String) {
-    def _defaultPrefix: String = {
-      if (_prefix.endsWith("/")) "" else "/"
-    }
-
-  
-    // @LINE:6
-    def index: Call = {
-      
-      Call("GET", _prefix)
-    }
-  
-  }
 
   // @LINE:9
   class ReverseProductController(_prefix: => String) {
@@ -99,39 +84,6 @@ package controllers {
     def deleteCategory(id:Int): Call = {
       
       Call("DELETE", _prefix + { _defaultPrefix } + "categories/" + play.core.routing.dynamicString(implicitly[play.api.mvc.PathBindable[Int]].unbind("id", id)))
-    }
-  
-  }
-
-  // @LINE:23
-  class ReverseCartController(_prefix: => String) {
-    def _defaultPrefix: String = {
-      if (_prefix.endsWith("/")) "" else "/"
-    }
-
-  
-    // @LINE:23
-    def getCart: Call = {
-      
-      Call("GET", _prefix + { _defaultPrefix } + "cart")
-    }
-  
-    // @LINE:24
-    def addToCart(productId:Int): Call = {
-      
-      Call("POST", _prefix + { _defaultPrefix } + "cart/add/" + play.core.routing.dynamicString(implicitly[play.api.mvc.PathBindable[Int]].unbind("productId", productId)))
-    }
-  
-    // @LINE:25
-    def removeFromCart(productId:Int): Call = {
-      
-      Call("POST", _prefix + { _defaultPrefix } + "cart/remove/" + play.core.routing.dynamicString(implicitly[play.api.mvc.PathBindable[Int]].unbind("productId", productId)))
-    }
-  
-    // @LINE:26
-    def checkout: Call = {
-      
-      Call("POST", _prefix + { _defaultPrefix } + "cart/checkout")
     }
   
   }

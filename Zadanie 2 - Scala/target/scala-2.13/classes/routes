@@ -3,7 +3,7 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 
 # Home page
-GET     /                           controllers.HomeController.index
+# GET     /                           controllers.HomeController.index
 
 # Product routes
 GET     /products                   controllers.ProductController.getAllProducts
@@ -20,7 +20,7 @@ PUT     /categories/:id             controllers.CategoryController.updateCategor
 DELETE  /categories/:id             controllers.CategoryController.deleteCategory(id: Int)
 
 # Cart routes
-GET     /cart                       controllers.CartController.getCart
-POST    /cart/add/:productId        controllers.CartController.addToCart(productId: Int)
-POST    /cart/remove/:productId     controllers.CartController.removeFromCart(productId: Int)
-POST    /cart/checkout              controllers.CartController.checkout
+# GET     /cart                       controllers.CartController.getCart
+# POST    /cart/add/:productId        controllers.CartController.addToCart(productId: Int)
+# POST    /cart/remove/:productId     controllers.CartController.removeFromCart(productId: Int)
+# POST    /cart/checkout              controllers.CartController.checkout 

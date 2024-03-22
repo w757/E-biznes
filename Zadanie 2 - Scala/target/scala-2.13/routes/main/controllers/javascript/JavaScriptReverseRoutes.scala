@@ -7,28 +7,8 @@ import play.api.routing.JavaScriptReverseRoute
 import _root_.controllers.Assets.Asset
 import _root_.play.libs.F
 
-// @LINE:6
+// @LINE:9
 package controllers.javascript {
-
-  // @LINE:6
-  class ReverseHomeController(_prefix: => String) {
-
-    def _defaultPrefix: String = {
-      if (_prefix.endsWith("/")) "" else "/"
-    }
-
-  
-    // @LINE:6
-    def index: JavaScriptReverseRoute = JavaScriptReverseRoute(
-      "controllers.HomeController.index",
-      """
-        function() {
-          return _wA({method:"GET", url:"""" + _prefix + """"})
-        }
-      """
-    )
-  
-  }
 
   // @LINE:9
   class ReverseProductController(_prefix: => String) {
@@ -144,56 +124,6 @@ package controllers.javascript {
       """
         function(id0) {
           return _wA({method:"DELETE", url:"""" + _prefix + { _defaultPrefix } + """" + "categories/" + encodeURIComponent((""" + implicitly[play.api.mvc.PathBindable[Int]].javascriptUnbind + """)("id", id0))})
-        }
-      """
-    )
-  
-  }
-
-  // @LINE:23
-  class ReverseCartController(_prefix: => String) {
-
-    def _defaultPrefix: String = {
-      if (_prefix.endsWith("/")) "" else "/"
-    }
-
-  
-    // @LINE:23
-    def getCart: JavaScriptReverseRoute = JavaScriptReverseRoute(
-      "controllers.CartController.getCart",
-      """
-        function() {
-          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "cart"})
-        }
-      """
-    )
-  
-    // @LINE:24
-    def addToCart: JavaScriptReverseRoute = JavaScriptReverseRoute(
-      "controllers.CartController.addToCart",
-      """
-        function(productId0) {
-          return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "cart/add/" + encodeURIComponent((""" + implicitly[play.api.mvc.PathBindable[Int]].javascriptUnbind + """)("productId", productId0))})
-        }
-      """
-    )
-  
-    // @LINE:25
-    def removeFromCart: JavaScriptReverseRoute = JavaScriptReverseRoute(
-      "controllers.CartController.removeFromCart",
-      """
-        function(productId0) {
-          return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "cart/remove/" + encodeURIComponent((""" + implicitly[play.api.mvc.PathBindable[Int]].javascriptUnbind + """)("productId", productId0))})
-        }
-      """
-    )
-  
-    // @LINE:26
-    def checkout: JavaScriptReverseRoute = JavaScriptReverseRoute(
-      "controllers.CartController.checkout",
-      """
-        function() {
-          return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "cart/checkout"})
         }
       """
     )

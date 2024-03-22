@@ -3,77 +3,66 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
-import models.Product
 import play.api.libs.json.Json
-
-import play.api.mvc._
+import scala.collection.mutable.ListBuffer
 import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
+case class Category(id: Int, name: String)
+
+object CategoryList {
+  // Sample category list
+  val categories: ListBuffer[Category] = ListBuffer(
+    Category(1, "Electronics"),
+    Category(2, "Clothing")
+  )
+}
+
+
+case class Product(id: Int, name: String, price: Double, category: String)
+
+object ProductList {
+  // Sample product list
+  val products: ListBuffer[Product] = ListBuffer(
+    Product(1, "Smartphone", 599.99, "Electronics"),
+    Product(2, "Laptop", 999.99, "Electronics")
+  )
+
+  var categoriesSet: Set[String] = products.map(_.category).toSet
+}
 
 @Singleton
 class ProductController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
-  // List of data 
-  var products: List[Product] = List(
-    Product(1, "Smartphone", 599.99, "Electronics"),
-    Product(2, "Laptop", 999.99, "Electronics"),
-    Product(3, "Headphones", 149.99, "Electronics"),
-    Product(4, "Tablet", 399.99, "Electronics"),
-    Product(5, "Smart Watch", 199.99, "Electronics"),
-    Product(6, "Digital Camera", 449.99, "Electronics"),
-    Product(7, "Bluetooth Speaker", 79.99, "Electronics"),
-    Product(8, "Gaming Console", 499.99, "Electronics"),
-    Product(9, "Wireless Earbuds", 129.99, "Electronics"),
-    Product(10, "External Hard Drive", 79.99, "Electronics"),
-    Product(11, "Running Shoes", 89.99, "Sports"),
-    Product(12, "Yoga Mat", 29.99, "Sports"),
-    Product(13, "Dumbbells", 49.99, "Sports"),
-    Product(14, "Tennis Racket", 79.99, "Sports"),
-    Product(15, "Soccer Ball", 19.99, "Sports"),
-    Product(16, "Bicycle", 399.99, "Sports"),
-    Product(17, "Treadmill", 799.99, "Sports"),
-    Product(18, "Golf Clubs Set", 299.99, "Sports"),
-    Product(19, "Swimming Goggles", 39.99, "Sports"),
-    Product(20, "Basketball Hoop", 199.99, "Sports"),
-    Product(21, "Frying Pan", 39.99, "Kitchen"),
-    Product(22, "Coffee Maker", 149.99, "Kitchen"),
-    Product(23, "Blender", 69.99, "Kitchen"),
-    Product(24, "Toaster", 29.99, "Kitchen"),
-    Product(25, "Cutlery Set", 49.99, "Kitchen"),
-    Product(26, "Food Processor", 99.99, "Kitchen"),
-    Product(27, "Microwave Oven", 149.99, "Kitchen"),
-    Product(28, "Slow Cooker", 79.99, "Kitchen"),
-    Product(29, "Electric Kettle", 34.99, "Kitchen"),
-    Product(30, "Stand Mixer", 249.99, "Kitchen")
-  )
+  implicit val productWrites: Writes[Product] = Json.writes[Product]
+  implicit val productReads: Reads[Product] = (
+    (JsPath \ "id").read[Int] and
+    (JsPath \ "name").read[String] and
+    (JsPath \ "price").read[Double] and
+    (JsPath \ "category").read[String]
+  )(Product.apply _)
 
   // GET /products
   def getAllProducts: Action[AnyContent] = Action {
-    Ok(Json.toJson(products))
+    Ok(Json.toJson(ProductList.products.toList))
   }
 
   // GET /products/:id
   def getProductById(id: Int): Action[AnyContent] = Action { implicit request =>
-    products.find(_.id == id) match {
-      case Some(product) => Ok(Json.toJson(product)) // Returning product data in JSON format
-      case None => NotFound(Json.obj("error" -> "Product not found")) // Returning error in JSON format
+    ProductList.products.find(_.id == id) match {
+      case Some(product) => Ok(Json.toJson(product))
+      case None => NotFound(Json.obj("error" -> "Product not found"))
     }
   }
-
-
-
 
   // POST /products/
   def createProduct: Action[JsValue] = Action(parse.json) { implicit request =>
     request.body.validate[Product].fold(
-      errors => {
-        BadRequest(Json.obj("error" -> JsError.toJson(errors)))
-      },
+      errors => BadRequest(Json.obj("error" -> JsError.toJson(errors))),
       product => {
-        // Add the product to the list
-        val newProductId = products.map(_.id).max + 1
+        val newProductId = if (ProductList.products.isEmpty) 1 else ProductList.products.map(_.id).max + 1
         val newProduct = product.copy(id = newProductId)
-        products = products :+ newProduct  
+        ProductList.products += newProduct
         Created(Json.toJson(newProduct))
       }
     )
@@ -82,21 +71,14 @@ class ProductController @Inject()(cc: ControllerComponents) extends AbstractCont
   // PUT /products/:id
   def updateProduct(id: Int): Action[JsValue] = Action(parse.json) { implicit request =>
     request.body.validate[Product].fold(
-      errors => {
-        BadRequest(Json.obj("error" -> JsError.toJson(errors)))
-      },
+      errors => BadRequest(Json.obj("error" -> JsError.toJson(errors))),
       updatedProduct => {
-        println("This is line 1.")
-        products.find(_.id == id) match {
-          case Some(existingProduct) =>
-            // Update the existing product with the provided data
-            val updatedProducts = products.map { product =>
-              if (product.id == id) updatedProduct else product
-            }
-            products = updatedProducts
-            Ok(Json.toJson(updatedProduct))
-          case None =>
+        ProductList.products.indexWhere(_.id == id) match {
+          case -1 =>
             NotFound(Json.obj("error" -> "Product not found"))
+          case index =>
+            ProductList.products.update(index, updatedProduct.copy(id = id))
+            Ok(Json.toJson(updatedProduct))
         }
       }
     )
@@ -104,14 +86,77 @@ class ProductController @Inject()(cc: ControllerComponents) extends AbstractCont
 
   // DELETE /products/:id
   def deleteProduct(id: Int): Action[AnyContent] = Action { implicit request =>
-    products.find(_.id == id) match {
-      case Some(_) =>
-        // Delete product 
-        products = products.filterNot(_.id == id)
-        Ok(Json.obj("message" -> "Product deleted successfully"))
-      case None =>
+    ProductList.products.indexWhere(_.id == id) match {
+      case -1 =>
         NotFound(Json.obj("error" -> "Product not found"))
+      case index =>
+        ProductList.products.remove(index)
+        Ok(Json.obj("message" -> "Product deleted successfully"))
     }
   }
 }
 
+
+
+@Singleton
+class CategoryController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+
+  implicit val categoryWrites: Writes[Category] = Json.writes[Category]
+  implicit val categoryReads: Reads[Category] = (
+    (JsPath \ "id").read[Int] and
+    (JsPath \ "name").read[String]
+  )(Category.apply _)
+
+  // GET /categories
+  def getAllCategories: Action[AnyContent] = Action {
+    Ok(Json.toJson(CategoryList.categories.toList))
+  }
+
+  // GET /categories/:id
+  def getCategoryById(id: Int): Action[AnyContent] = Action { implicit request =>
+    CategoryList.categories.find(_.id == id) match {
+      case Some(category) => Ok(Json.toJson(category))
+      case None => NotFound(Json.obj("error" -> "Category not found"))
+    }
+  }
+
+  // POST /categories
+  def createCategory: Action[JsValue] = Action(parse.json) { implicit request =>
+    request.body.validate[Category].fold(
+      errors => BadRequest(Json.obj("error" -> JsError.toJson(errors))),
+      category => {
+        val newCategoryId = if (CategoryList.categories.isEmpty) 1 else CategoryList.categories.map(_.id).max + 1 
+        val newCategory = category.copy(id = newCategoryId)
+        CategoryList.categories += newCategory
+        Created(Json.toJson(newCategory))
+      }
+    )
+  }
+
+  // PUT /categories/:id
+  def updateCategory(id: Int): Action[JsValue] = Action(parse.json) { implicit request =>
+    request.body.validate[Category].fold(
+      errors => BadRequest(Json.obj("error" -> JsError.toJson(errors))),
+      updatedCategory => {
+        CategoryList.categories.indexWhere(_.id == id) match {
+          case -1 =>
+            NotFound(Json.obj("error" -> "Category not found"))
+          case index =>
+            CategoryList.categories.update(index, updatedCategory.copy(id = id))
+            Ok(Json.toJson(updatedCategory))
+        }
+      }
+    )
+  }
+
+  // DELETE /categories/:id
+  def deleteCategory(id: Int): Action[AnyContent] = Action { implicit request =>
+    CategoryList.categories.indexWhere(_.id == id) match {
+      case -1 =>
+        NotFound(Json.obj("error" -> "Category not found"))
+      case index =>
+        CategoryList.categories.remove(index)
+        Ok(Json.obj("message" -> "Category deleted successfully"))
+    }
+  }
+}

@@ -17,6 +17,7 @@ lazy val root = (project in file("."))
       "io.dropwizard.metrics" % "metrics-core" % "4.2.25",
       "com.palominolabs.http" % "url-builder" % "1.1.5",
       "net.jodah" % "failsafe" % "2.4.4",
+      "com.lihaoyi" %% "upickle" % "1.4.1"
     ),
     PlayKeys.externalizeResources := false,
     (Test / testOptions) := Seq(Tests.Argument(TestFrameworks.JUnit, "-a", "-v")),

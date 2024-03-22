@@ -1,5 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/kali/Desktop/E-biznes/Zadanie 2 - Scala/app/controllers/ProductController.scala:80:7: method createProduct is defined twice;[0m
-[0m[[0m[31merror[0m] [0m[0m  the conflicting method createProduct was defined at line 64:7[0m
-[0m[[0m[31merror[0m] [0m[0m  def createProduct: Action[JsValue] = Action(parse.json) { implicit request =>[0m
-[0m[[0m[31merror[0m] [0m[0m      ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/kali/Desktop/E-biznes/Zadanie 2 - Scala/app/controllers/ProductController.scala:24:1: '{' expected.[0m
+[0m[[0m[31merror[0m] [0m[0mimport javax.inject._[0m
+[0m[[0m[31merror[0m] [0m[0m^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m
