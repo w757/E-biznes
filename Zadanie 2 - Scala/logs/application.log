@@ -1,13 +1,5 @@
-2024-03-22 15:52:28,990 [INFO] from play.api.db.DefaultDBApi in play-dev-mode-pekko.actor.default-dispatcher-10 - Database [default] initialized
-2024-03-22 15:52:28,995 [INFO] from play.api.db.HikariCPConnectionPool in play-dev-mode-pekko.actor.default-dispatcher-10 - Creating Pool for datasource 'default'
-2024-03-22 15:52:29,027 [INFO] from play.api.db.HikariCPConnectionPool in play-dev-mode-pekko.actor.default-dispatcher-10 - datasource [default] bound to JNDI as DefaultDS
-2024-03-22 15:52:29,068 [INFO] from org.apache.pekko.event.slf4j.Slf4jLogger in application-pekko.actor.default-dispatcher-4 - Slf4jLogger started
-2024-03-22 15:52:30,551 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-10 - Application started (Dev) (no global state)
-2024-03-22 15:52:56,032 [INFO] from play.api.internal.libs.concurrent.CoordinatedShutdownSupport in pool-5-thread-6 - Starting synchronous coordinated shutdown with ServerStoppedReason reason and 40000 milliseconds timeout
-2024-03-22 15:52:56,034 [INFO] from org.apache.pekko.actor.CoordinatedShutdown in play-dev-mode-pekko.actor.default-dispatcher-12 - Running CoordinatedShutdown with reason [ServerStoppedReason]
-2024-03-22 15:52:56,037 [INFO] from play.core.server.PekkoHttpServer in pool-5-thread-6 - Stopping Pekko HTTP server...
-2024-03-22 15:52:56,041 [INFO] from play.core.server.PekkoHttpServer in play-dev-mode-pekko.actor.internal-dispatcher-2 - Unbinding /[0:0:0:0:0:0:0:0]:9000
-2024-03-22 15:52:56,048 [INFO] from play.core.server.PekkoHttpServer in play-dev-mode-pekko.actor.internal-dispatcher-5 - Terminating server binding for /[0:0:0:0:0:0:0:0]:9000
-2024-03-22 15:52:56,054 [INFO] from org.apache.pekko.actor.CoordinatedShutdown in application-pekko.actor.default-dispatcher-4 - Running CoordinatedShutdown with reason [ApplicationStoppedReason]
-2024-03-22 15:52:56,063 [INFO] from play.api.db.HikariCPConnectionPool in application-pekko.actor.internal-dispatcher-2 - Shutting down connection pool.
-2024-03-22 15:52:56,094 [INFO] from play.core.server.PekkoHttpServer in play-dev-mode-pekko.actor.internal-dispatcher-5 - Running provided shutdown stop hooks
+2024-03-22 16:02:28,664 [INFO] from play.api.db.DefaultDBApi in play-dev-mode-pekko.actor.default-dispatcher-8 - Database [default] initialized
+2024-03-22 16:02:28,668 [INFO] from play.api.db.HikariCPConnectionPool in play-dev-mode-pekko.actor.default-dispatcher-8 - Creating Pool for datasource 'default'
+2024-03-22 16:02:28,698 [INFO] from play.api.db.HikariCPConnectionPool in play-dev-mode-pekko.actor.default-dispatcher-8 - datasource [default] bound to JNDI as DefaultDS
+2024-03-22 16:02:28,719 [INFO] from org.apache.pekko.event.slf4j.Slf4jLogger in application-pekko.actor.default-dispatcher-6 - Slf4jLogger started
+2024-03-22 16:02:30,156 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-8 - Application started (Dev) (no global state)
