@@ -61,6 +61,9 @@ class ProductController @Inject()(cc: ControllerComponents) extends AbstractCont
   }
 
 
+
+
+  // POST /products/
   def createProduct: Action[JsValue] = Action(parse.json) { implicit request =>
     request.body.validate[Product].fold(
       errors => {
@@ -70,22 +73,45 @@ class ProductController @Inject()(cc: ControllerComponents) extends AbstractCont
         // Add the product to the list
         val newProductId = products.map(_.id).max + 1
         val newProduct = product.copy(id = newProductId)
-        products = products :+ newProduct // Użyj operatora :+ do dodania nowego produktu do listy 
+        products = products :+ newProduct  
         Created(Json.toJson(newProduct))
       }
     )
   }
 
-
   // PUT /products/:id
-  def updateProduct(id: Int): Action[AnyContent] = Action {
-    // Logic to update an existing product
-    NotImplemented // Implement as needed
+  def updateProduct(id: Int): Action[JsValue] = Action(parse.json) { implicit request =>
+    request.body.validate[Product].fold(
+      errors => {
+        BadRequest(Json.obj("error" -> JsError.toJson(errors)))
+      },
+      updatedProduct => {
+        println("This is line 1.")
+        products.find(_.id == id) match {
+          case Some(existingProduct) =>
+            // Update the existing product with the provided data
+            val updatedProducts = products.map { product =>
+              if (product.id == id) updatedProduct else product
+            }
+            products = updatedProducts
+            Ok(Json.toJson(updatedProduct))
+          case None =>
+            NotFound(Json.obj("error" -> "Product not found"))
+        }
+      }
+    )
   }
 
   // DELETE /products/:id
-  def deleteProduct(id: Int): Action[AnyContent] = Action {
-    // Logic to delete an existing product
-    NotImplemented // Implement as needed
+  def deleteProduct(id: Int): Action[AnyContent] = Action { implicit request =>
+    products.find(_.id == id) match {
+      case Some(_) =>
+        // Delete product 
+        products = products.filterNot(_.id == id)
+        Ok(Json.obj("message" -> "Product deleted successfully"))
+      case None =>
+        NotFound(Json.obj("error" -> "Product not found"))
+    }
   }
 }
+
