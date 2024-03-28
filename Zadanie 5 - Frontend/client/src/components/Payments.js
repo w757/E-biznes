@@ -2,36 +2,42 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const Payments = () => {
-  const [cardNumber, setCardNumber] = useState('');
+  const [paymentId, setPaymentId] = useState('');
+  const [paymentStatus, setPaymentStatus] = useState('');
+  const [paymentData, setPaymentData] = useState(null);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const paymentData = {
-      cardNumber: cardNumber
-    };
-    axios.post('http://localhost:8080/payment', paymentData)
-      .then(response => {
-        console.log('Payment successful:', response.data);
-      })
-      .catch(error => {
-        console.error('Payment error:', error);
-      });
-  };
-
-  const handleChange = (e) => {
-    setCardNumber(e.target.value);
+  const fetchPaymentStatus = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/payment/${paymentId}?status=${paymentStatus}`);
+      setPaymentData(response.data);
+      setError('');
+    } catch (error) {
+      setPaymentData(null);
+      setError('Error fetching payment data');
+    }
   };
 
   return (
     <div>
       <h2>Payments</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Card Number:
-          <input type="text" value={cardNumber} onChange={handleChange} />
-        </label>
-        <button type="submit">Pay</button>
-      </form>
+      <div>
+        <label htmlFor="paymentId">Payment ID:</label>
+        <input type="text" id="paymentId" value={paymentId} onChange={(e) => setPaymentId(e.target.value)} />
+      </div>
+      <div>
+        <label htmlFor="paymentStatus">Payment Status:</label>
+        <input type="text" id="paymentStatus" value={paymentStatus} onChange={(e) => setPaymentStatus(e.target.value)} />
+      </div>
+      <button onClick={fetchPaymentStatus}>Check Payment Status</button>
+      {error && <p>{error}</p>}
+      {paymentData && (
+        <div>
+          <p>Payment ID: {paymentData.ID}</p>
+          <p>Amount: {paymentData.Amount}</p>
+          <p>Status: {paymentData.Status}</p>
+        </div>
+      )}
     </div>
   );
 };

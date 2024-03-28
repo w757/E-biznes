@@ -25,7 +25,7 @@ const ProductList = () => {
                     <li key={product.ID}>
                         <h3>{product.Name}</h3>
                         <p>Price: ${product.Price}</p>
-                        <p>Category: {product.Category.Name}</p>
+                        {product.Category && <p>Category: {product.Category.Name}</p>}
                     </li>
                 ))}
             </ul>

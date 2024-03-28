@@ -2,8 +2,9 @@ package main
 
 import (
     "net/http"
+
     "github.com/labstack/echo/v4"
-    "github.com/labstack/echo/v4/middleware" 
+    "github.com/labstack/echo/v4/middleware"
     "gorm.io/driver/sqlite"
     "gorm.io/gorm"
 )
@@ -11,10 +12,10 @@ import (
 // Product model
 type Product struct {
     gorm.Model
-    Name      string
-    Price     float64
-    CategoryID uint // category key
-    Category   Category
+    Name       string
+    Price      float64
+    CategoryID uint     // category key
+    Category   Category `json:"category"`
 }
 
 // Category model
@@ -26,14 +27,21 @@ type Category struct {
 // Cart model
 type Cart struct {
     gorm.Model
-    Items []Product `gorm:"many2many:cart_items;"`
+    Items     []Product `gorm:"many2many:cart_items;"`
+    PaymentID uint      // Pole przechowujące identyfikator płatności
+}
+
+// Payment model
+type Payment struct {
+    gorm.Model
+    Amount float64
+    Status string
 }
 
 func main() {
     e := echo.New()
 
-
-    //CORS
+    // CORS
     e.Use(middleware.CORS())
 
     db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
@@ -41,9 +49,9 @@ func main() {
         panic("failed to connect database")
     }
 
-    db.AutoMigrate(&Product{}, &Category{}, &Cart{})
+    db.AutoMigrate(&Product{}, &Category{}, &Cart{}, &Payment{}) // Migrate Payment model
 
-    // Definiowanie punktów końcowych
+    // Define endpoints
     e.GET("/products", getProducts(db))
     e.POST("/products", createProduct(db))
     e.GET("/products/:id", getProduct(db))
@@ -51,9 +59,124 @@ func main() {
     e.DELETE("/products/:id", deleteProduct(db))
 
     e.GET("/cart", getCart(db))
+    e.POST("/cart/add/:id", addToCart(db))     // Add to Cart endpoint
+    e.DELETE("/cart/remove/:id", removeFromCart(db)) // Remove from Cart endpoint
 
-    // Start serwera
+    e.POST("/payment", makePayment(db)) // Payment endpoint
+    e.GET("/payment/:id", getPayment(db))
+
+    // Start server
     e.Logger.Fatal(e.Start(":8080"))
+}
+
+// GET /cart
+func getCart(db *gorm.DB) echo.HandlerFunc {
+    return func(c echo.Context) error {
+        var cart Cart
+        db.Preload("Items.Category").First(&cart)
+        return c.JSON(http.StatusOK, cart)
+    }
+}
+
+// POST /cart/add/:id
+func addToCart(db *gorm.DB) echo.HandlerFunc {
+    return func(c echo.Context) error {
+        id := c.Param("id")
+        var product Product
+        if result := db.Preload("Category").First(&product, id); result.Error != nil {
+            return result.Error
+        }
+
+        var cart Cart
+        db.FirstOrCreate(&cart) // Create cart if not exists
+
+        // Reload product with category
+        db.Preload("Category").First(&product, id)
+
+        // Append product to cart items
+        db.Model(&cart).Association("Items").Append(&product)
+
+        return c.JSON(http.StatusOK, cart)
+    }
+}
+
+// DELETE /cart/remove/:id
+func removeFromCart(db *gorm.DB) echo.HandlerFunc {
+    return func(c echo.Context) error {
+        id := c.Param("id")
+        var product Product
+        if result := db.Preload("Category").First(&product, id); result.Error != nil {
+            return result.Error
+        }
+
+        var cart Cart
+        db.First(&cart) // Retrieve cart
+
+        // Reload product with category
+        db.Preload("Category").First(&product, id)
+
+        // Remove product from cart items
+        db.Model(&cart).Association("Items").Delete(&product)
+
+        return c.JSON(http.StatusOK, cart)
+    }
+}
+
+// GET /payment/:id
+func getPayment(db *gorm.DB) echo.HandlerFunc {
+    return func(c echo.Context) error {
+        id := c.Param("id")
+        status := c.QueryParam("status") // Pobierz status płatności z zapytania
+
+        var payment Payment
+        if err := db.Where("id = ? AND status = ?", id, status).First(&payment).Error; err != nil {
+            return err
+        }
+
+        // Znajdź koszyk powiązany z płatnością
+        var cart Cart
+        if err := db.Preload("Items.Category").Where("payment_id = ?", payment.ID).First(&cart).Error; err != nil {
+            return err
+        }
+
+        // Zwróć informacje o płatności i powiązanym koszyku
+        paymentWithCart := struct {
+            Payment Payment `json:"payment"`
+            Cart    Cart    `json:"cart"`
+        }{
+            Payment: payment,
+            Cart:    cart,
+        }
+
+        return c.JSON(http.StatusOK, paymentWithCart)
+    }
+}
+
+// POST /payment
+func makePayment(db *gorm.DB) echo.HandlerFunc {
+    return func(c echo.Context) error {
+        // Calculate total amount from cart
+        var cart Cart
+        db.Preload("Items").First(&cart)
+
+        var totalAmount float64
+        for _, item := range cart.Items {
+            totalAmount += item.Price
+        }
+
+        // Perform payment (mock implementation)
+        payment := Payment{Amount: totalAmount, Status: "Success"}
+        db.Create(&payment)
+
+        // Powiąż identyfikator płatności z koszykiem
+        cart.PaymentID = payment.ID
+        db.Save(&cart)
+
+        // Clear cart after successful payment
+        db.Delete(&cart.Items)
+
+        return c.JSON(http.StatusOK, payment)
+    }
 }
 
 // GET /products
@@ -124,15 +247,5 @@ func deleteProduct(db *gorm.DB) echo.HandlerFunc {
         }
 
         return c.NoContent(http.StatusNoContent)
-    }
-}
-
-
-// GET /cart
-func getCart(db *gorm.DB) echo.HandlerFunc {
-    return func(c echo.Context) error {
-        var cart Cart
-        db.Preload("Items.Category").First(&cart)
-        return c.JSON(http.StatusOK, cart)
     }
 }
