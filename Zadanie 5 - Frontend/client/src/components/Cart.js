@@ -5,24 +5,26 @@ const Cart = () => {
   const [cart, setCart] = useState({});
 
   useEffect(() => {
-    axios.get('http://localhost:8080/cart')
-      .then(response => {
-        setCart(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching cart:', error);
-      });
+    fetchCart();
   }, []);
+
+  const fetchCart = async () => {
+      try {
+          const response = await axios.get('http://localhost:8080/cart');
+          setCart(response.data);
+      } catch (error) {
+          console.error('Error fetching products:', error);
+      }
+  };
 
   return (
     <div>
       <h2>Cart</h2>
-      {/* Display cart items */}
-      <ul>
+      {/* <ul>
         {cart.Items && cart.Items.map(item => (
           <li key={item.ID}>{item.Name}</li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 };

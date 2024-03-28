@@ -3,6 +3,7 @@ package main
 import (
     "net/http"
     "github.com/labstack/echo/v4"
+    "github.com/labstack/echo/v4/middleware" 
     "gorm.io/driver/sqlite"
     "gorm.io/gorm"
 )
@@ -30,6 +31,10 @@ type Cart struct {
 
 func main() {
     e := echo.New()
+
+
+    //CORS
+    e.Use(middleware.CORS())
 
     db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
     if err != nil {

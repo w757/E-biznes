@@ -9,7 +9,7 @@ const Payments = () => {
     const paymentData = {
       cardNumber: cardNumber
     };
-    axios.post('http://localhost:8080/payments', paymentData)
+    axios.post('http://localhost:8080/payment', paymentData)
       .then(response => {
         console.log('Payment successful:', response.data);
       })
