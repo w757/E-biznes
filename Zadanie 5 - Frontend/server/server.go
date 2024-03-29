@@ -125,13 +125,15 @@ func addToCart(db *gorm.DB) echo.HandlerFunc {
         }
 
         var cart Cart
-        db.FirstOrCreate(&cart) // Create cart if not exists
-
-        // Reload product with category
-        db.Preload("Category").First(&product, id)
+        if err := db.FirstOrCreate(&cart).Error; err != nil {
+            return err
+        }
 
         // Append product to cart items
-        db.Model(&cart).Association("Items").Append(&product)
+        cart.Items = append(cart.Items, product)
+        if err := db.Save(&cart).Error; err != nil {
+            return err
+        }
 
         return c.JSON(http.StatusOK, cart)
     }
@@ -147,17 +149,26 @@ func removeFromCart(db *gorm.DB) echo.HandlerFunc {
         }
 
         var cart Cart
-        db.First(&cart) // Retrieve cart
-
-        // Reload product with category
-        db.Preload("Category").First(&product, id)
+        if err := db.Preload("Items").First(&cart).Error; err != nil {
+            return err
+        }
 
         // Remove product from cart items
-        db.Model(&cart).Association("Items").Delete(&product)
+        for i, item := range cart.Items {
+            if item.ID == product.ID {
+                cart.Items = append(cart.Items[:i], cart.Items[i+1:]...)
+                break
+            }
+        }
+
+        if err := db.Save(&cart).Error; err != nil {
+            return err
+        }
 
         return c.JSON(http.StatusOK, cart)
     }
 }
+
 
 
 // GET /payment/:id

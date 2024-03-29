@@ -36,38 +36,41 @@ const Cart = () => {
   };
 
   const renderCartItems = () => {
-    if (!cart.Items) return null;
-
+    if (!cart.Items || cart.Items.length === 0) {
+      return (
+        <div>
+          <h3>Cart Details</h3>
+          <p>ID: {cart.ID}</p>
+          <p>PaymentID: {cart.PaymentID}</p>
+          <p>No items in the cart</p>
+        </div>
+      );
+    }
+  
     return (
       <div>
         <h3>Cart Details</h3>
-        <p>ID: {cart.ID}</p>
-        <p>PaymentID: {cart.PaymentID}</p>
+        {/* <p>ID: {cart.ID}</p>
+        <p>PaymentID: {cart.PaymentID}</p> */}
         <h3>Cart Items</h3>
         <ul>
           {cart.Items.map((item, index) => (
             <li key={index}>
-              <strong>Name:</strong> {item.Name}, <strong>Price:</strong> {item.Price}, <strong>Category:</strong> {item.Category.Name}
-              <ul>
-                <li>ID: {item.ID}</li>
-                <li>CreatedAt: {item.CreatedAt}</li>
-                <li>UpdatedAt: {item.UpdatedAt}</li>
-              </ul>
+              <strong>Name:</strong> {item.Name}, <strong>Price:</strong> {item.Price}
+              {item.Category && <><strong>, Category:</strong> {item.Category.Name}</>}
             </li>
           ))}
         </ul>
       </div>
     );
   };
-
+  
   const renderPaymentDetails = () => {
     if (!paymentDetails) return null;
 
     return (
       <div>
         <h3>Payment Details</h3>
-        <p>ID: {paymentDetails.ID}</p>
-        <p>Amount: {paymentDetails.Amount}</p>
         <p>Status: {paymentDetails.Status}</p>
       </div>
     );
