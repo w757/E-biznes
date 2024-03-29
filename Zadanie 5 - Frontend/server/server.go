@@ -2,6 +2,9 @@ package main
 
 import (
     "net/http"
+    "strconv"
+    "errors"
+    "fmt"
 
     "github.com/labstack/echo/v4"
     "github.com/labstack/echo/v4/middleware"
@@ -63,7 +66,7 @@ func main() {
     e.DELETE("/cart/remove/:id", removeFromCart(db)) // Remove from Cart endpoint
 
     e.POST("/payment", makePayment(db)) // Payment endpoint
-    e.GET("/payment/:id", getPayment(db))
+    e.GET("/payment/:id", getPayment(db)) // Payment by ID endpoint
 
     // Start server
     e.Logger.Fatal(e.Start(":8080"))
@@ -122,58 +125,52 @@ func removeFromCart(db *gorm.DB) echo.HandlerFunc {
     }
 }
 
+
 // GET /payment/:id
 func getPayment(db *gorm.DB) echo.HandlerFunc {
     return func(c echo.Context) error {
-        id := c.Param("id")
-        status := c.QueryParam("status") // Pobierz status płatności z zapytania
+        idStr := c.Param("id")
+        fmt.Println("ID:", idStr) // Upewnij się, że prawidłowo pobierasz parametr ID
+
+        // Konwersja parametru ID na typ liczbowy (uint)
+        id, err := strconv.ParseUint(idStr, 10, 64)
+        if err != nil {
+            // Obsługa błędu konwersji
+            return c.JSON(http.StatusBadRequest, echo.Map{"error": "Nieprawidłowy format ID płatności"})
+        }
 
         var payment Payment
-        if err := db.Where("id = ? AND status = ?", id, status).First(&payment).Error; err != nil {
-            return err
+        if err := db.Where("id = ?", id).First(&payment).Error; err != nil {
+            if errors.Is(err, gorm.ErrRecordNotFound) {
+                return c.JSON(http.StatusNotFound, echo.Map{"error": "Płatność o podanym ID nie istnieje"})
+            }
+            return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Wystąpił błąd podczas pobierania płatności"})
         }
 
-        // Znajdź koszyk powiązany z płatnością
-        var cart Cart
-        if err := db.Preload("Items.Category").Where("payment_id = ?", payment.ID).First(&cart).Error; err != nil {
-            return err
-        }
-
-        // Zwróć informacje o płatności i powiązanym koszyku
-        paymentWithCart := struct {
-            Payment Payment `json:"payment"`
-            Cart    Cart    `json:"cart"`
-        }{
-            Payment: payment,
-            Cart:    cart,
-        }
-
-        return c.JSON(http.StatusOK, paymentWithCart)
+        return c.JSON(http.StatusOK, payment)
     }
 }
 
+
 // POST /payment
 func makePayment(db *gorm.DB) echo.HandlerFunc {
+    
     return func(c echo.Context) error {
-        // Calculate total amount from cart
-        var cart Cart
-        db.Preload("Items").First(&cart)
-
-        var totalAmount float64
-        for _, item := range cart.Items {
-            totalAmount += item.Price
+        fmt.Println("Hello!")
+        payment := new(Payment)
+        if err := c.Bind(payment); err != nil {
+            return err
+        }
+        
+        // Ustawienie statusu płatności na Success, jeśli nie został podany
+        if payment.Status == "" {
+            payment.Status = "Success"
         }
 
-        // Perform payment (mock implementation)
-        payment := Payment{Amount: totalAmount, Status: "Success"}
-        db.Create(&payment)
-
-        // Powiąż identyfikator płatności z koszykiem
-        cart.PaymentID = payment.ID
-        db.Save(&cart)
-
-        // Clear cart after successful payment
-        db.Delete(&cart.Items)
+        // Wykonanie płatności
+        if err := db.Create(payment).Error; err != nil {
+            return err
+        }
 
         return c.JSON(http.StatusOK, payment)
     }

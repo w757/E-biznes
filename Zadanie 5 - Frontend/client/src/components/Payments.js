@@ -1,40 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-const Payments = () => {
-  const [paymentId, setPaymentId] = useState('');
-  const [paymentStatus, setPaymentStatus] = useState('');
+const Payment = () => {
+  const { id } = useParams();
   const [paymentData, setPaymentData] = useState(null);
   const [error, setError] = useState('');
 
-  const fetchPaymentStatus = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8080/payment/${paymentId}?status=${paymentStatus}`);
-      setPaymentData(response.data);
-      setError('');
-    } catch (error) {
-      setPaymentData(null);
-      setError('Error fetching payment data');
-    }
-  };
+  useEffect(() => {
+    const fetchPaymentStatus = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/payment/${id}`);
+        setPaymentData(response.data);
+        setError('');
+      } catch (error) {
+        setPaymentData(null);
+        if (error.response && error.response.status === 404) {
+          setError('Payment not found');
+        } else {
+          setError('Error fetching payment data');
+        }
+      }
+    };
+
+    fetchPaymentStatus();
+  }, [id]);
 
   return (
     <div>
-      <h2>Payments</h2>
-      <div>
-        <label htmlFor="paymentId">Payment ID:</label>
-        <input type="text" id="paymentId" value={paymentId} onChange={(e) => setPaymentId(e.target.value)} />
-      </div>
-      <div>
-        <label htmlFor="paymentStatus">Payment Status:</label>
-        <input type="text" id="paymentStatus" value={paymentStatus} onChange={(e) => setPaymentStatus(e.target.value)} />
-      </div>
-      <button onClick={fetchPaymentStatus}>Check Payment Status</button>
+      <h2>Payment Details</h2>
       {error && <p>{error}</p>}
       {paymentData && (
         <div>
           <p>Payment ID: {paymentData.ID}</p>
-          <p>Amount: {paymentData.Amount}</p>
           <p>Status: {paymentData.Status}</p>
         </div>
       )}
@@ -42,4 +40,4 @@ const Payments = () => {
   );
 };
 
-export default Payments;
+export default Payment;
