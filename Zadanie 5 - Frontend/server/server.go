@@ -82,38 +82,6 @@ func getCart(db *gorm.DB) echo.HandlerFunc {
 }
 
 
-// // GET /cart/:id
-// func getCart(db *gorm.DB) echo.HandlerFunc {
-    
-//     return func(c echo.Context) error {
-//         idStr := c.Param("id")
-//         fmt.Println("ID:", idStr) // Upewnij się, że prawidłowo pobierasz parametr ID
-
-//         // Konwersja parametru ID na typ liczbowy (uint)
-//         id, err := strconv.ParseUint(idStr, 10, 64)
-//         if err != nil {
-//             // Obsługa błędu konwersji
-//             return c.JSON(http.StatusBadRequest, echo.Map{"error": "Nieprawidłowy format ID"})
-//         }
-
-//         var cart Cart
-//         if err := db.Where("id = ?", id).First(&cart).Error; err != nil {
-//             if errors.Is(err, gorm.ErrRecordNotFound) {
-//                 return c.JSON(http.StatusNotFound, echo.Map{"error": "Płatność o podanym ID nie istnieje"})
-//             }
-//             return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Wystąpił błąd podczas pobierania płatności"})
-//         }
-
-//         return c.JSON(http.StatusOK, cart)
-//     }
-
-//     return func(c echo.Context) error {
-//         var cart Cart
-//         db.Preload("Items.Category").First(&cart)
-//         return c.JSON(http.StatusOK, cart)
-//     }
-// }
-
 
 // POST /cart/add/:id
 func addToCart(db *gorm.DB) echo.HandlerFunc {
@@ -241,6 +209,8 @@ func createProduct(db *gorm.DB) echo.HandlerFunc {
         return c.JSON(http.StatusCreated, product)
     }
 }
+
+
 
 // GET /products/:id
 func getProduct(db *gorm.DB) echo.HandlerFunc {

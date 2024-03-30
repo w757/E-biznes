@@ -17,6 +17,8 @@ const ProductList = () => {
         }
     };
 
+
+    
     return (
         <div>
             <h2>Products</h2>

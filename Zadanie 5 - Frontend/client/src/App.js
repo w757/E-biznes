@@ -10,7 +10,7 @@ const App = () => {
       <div>
         <Switch>
           <Route path="/products" component={ProductList} />
-          <Route path="/payments/:id" component={Payments} /> {/* Zmieniono ścieżkę na /payments/:id */}
+          <Route path="/payments/:id" component={Payments} />
           <Route path="/cart" component={Cart} />
         </Switch>
       </div>
