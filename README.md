@@ -42,18 +42,20 @@ Demo: https://drive.google.com/file/d/15Ohl21Zu2iHtpTx_Wr8Gl0wvVsuSCFPp/view?usp
 
 **Zadanie 3 Kotlin** 
 
-3.0 Należy stworzyć aplikację kliencką w Kotlinie we frameworku Ktor, która pozwala na przesyłanie wiadomości na platformę Discord
+✅ 3.0 Należy stworzyć aplikację kliencką w Kotlinie we frameworku Ktor, która pozwala na przesyłanie wiadomości na platformę Discord
 
-3.5 Aplikacja jest w stanie odbierać wiadomości użytkowników z platformy Discord skierowane do aplikacji (bota)
+✅ 3.5 Aplikacja jest w stanie odbierać wiadomości użytkowników z platformy Discord skierowane do aplikacji (bota)
 
-4.0 Zwróci listę kategorii na określone żądanie użytkownika
+✅ 4.0 Zwróci listę kategorii na określone żądanie użytkownika
 
 4.5 Zwróci listę produktów wg żądanej kategorii
 
 5.0 Aplikacja obsłuży dodatkowo jedną z platform: Slack, Messenfer, Webex, Skype, Discrod
 
-Kod:
-Demo:
+
+Kod: https://github.com/w757/E-biznes/tree/main/Zadanie%203%20-%20Kotlin
+
+Demo: https://drive.google.com/file/d/1WU9yu9PAGy_JlGWl1PoMRWFglpT9q4GV/view?usp=sharing
 
 
 
