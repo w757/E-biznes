@@ -111,3 +111,9 @@ Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%206%20-%20Testy
 
 
 **Zadanie 7 Sonar**
+
+✅ 3.0 
+
+Demo - https://drive.google.com/file/d/1LR7EOwBy9mZP-2ZECnCmNQCEjfZl2C2G/view?usp=sharing
+
+Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%207%20-%20Sonar
