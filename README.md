@@ -107,3 +107,7 @@ Testy mają w sumie zawierać minimum 50 asercji (3.5). Mają również uruchami
 Demo - https://drive.google.com/file/d/11jMDTlLlPDrdnwlupGmzFp2tfq4JnVqu/view?usp=sharing
 
 Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%206%20-%20Testy
+
+
+
+**Zadanie 7 Sonar**
