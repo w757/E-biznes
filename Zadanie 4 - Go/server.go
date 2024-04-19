@@ -57,7 +57,7 @@ func main() {
 
 	e.GET("/cart", getCart(db))
 
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(":8081"))
 }
 
 // GET /products
