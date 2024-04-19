@@ -28,9 +28,6 @@ Demo: https://drive.google.com/file/d/1W7h3DLzefbYcCgquvT--Xw-_n-OsAsGs/view?usp
 
 ✅ 4.0 Należy stworzyć kontrolery do Kategorii oraz Koszyka + endpointy zgodnie z CRUD
 
-4.5 Należy aplikację uruchomić na dockerze (stworzyć obraz) oraz dodać skrypt uruchamiający aplikację via ngrok
-
-5.0 Należy dodać konfigurację CORS dla dwóch hostów dla metod CRUD
 
 
 Kod: https://github.com/w757/E-biznes/tree/main/Zadanie%202%20-%20Scala
@@ -48,9 +45,6 @@ Demo: https://drive.google.com/file/d/15Ohl21Zu2iHtpTx_Wr8Gl0wvVsuSCFPp/view?usp
 
 ✅ 4.0 Zwróci listę kategorii na określone żądanie użytkownika
 
-4.5 Zwróci listę produktów wg żądanej kategorii
-
-5.0 Aplikacja obsłuży dodatkowo jedną z platform: Slack, Messenfer, Webex, Skype, Discrod
 
 
 Kod: https://github.com/w757/E-biznes/tree/main/Zadanie%203%20-%20Kotlin
@@ -107,20 +101,9 @@ Cypress JS (JS)
 Selenium (Kotlin, Python, Java, JS, Go, Scala)
 Testy mają w sumie zawierać minimum 50 asercji (3.5). Mają również uruchamiać się na platformie Browserstack (5.0). Proszę pamiętać o stworzeniu darmowego konta via https://education.github.com/pack.
 
-3.0 Należy stworzyć 20 przypadków testowych w CypressJS lub Selenium (Kotlin, Python, Java, JS, Go, Scala)
+✅ 3.0 Należy stworzyć 20 przypadków testowych w CypressJS lub Selenium (Kotlin, Python, Java, JS, Go, Scala)
 
-3.5 Należy rozszerzyć testy funkcjonalne, aby zawierały minimum 50 asercji
 
-4.0 Należy stworzyć testy jednostkowe do wybranego wcześniejszego projektu z minimum 50 asercjami
+Demo - https://drive.google.com/file/d/11jMDTlLlPDrdnwlupGmzFp2tfq4JnVqu/view?usp=sharing
 
-4.5 Należy dodać testy API, należy pokryć wszystkie endpointy z minimum jednym scenariuszem negatywnym per endpoint
-
-5.0 Należy uruchomić testy funkcjonalne na Browserstacku
-
-Studian dzienne:
-
-Termin gr.1:
-
-Termin gr.2:
-
-Studia zaoczne:
+Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%206%20-%20Testy
