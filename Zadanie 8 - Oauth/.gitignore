@@ -1,0 +1,7 @@
+server/app/modules/__pycache__/
+server/app/__pycache__/
+server/app/routes/__pycache__/
+server/app/utils/__pycache__/
+**/.idea
+**/.DS_Store
+**/node_modules
