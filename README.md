@@ -117,3 +117,15 @@ Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%206%20-%20Testy
 Demo - https://drive.google.com/file/d/1LR7EOwBy9mZP-2ZECnCmNQCEjfZl2C2G/view?usp=sharing
 
 Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%207%20-%20Sonar
+
+
+**Zadanie 8 Oauth**
+
+✅ 3.0 
+✅ 3.5 
+
+
+Demo - https://drive.google.com/file/d/1OHUKpv2Gk-24GGBAmZqowki6zyGTkDBM/view?usp=sharing
+
+Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%208%20-%20Oauth
+
