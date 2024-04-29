@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Frontend</title>
+</head>
+<body>
+    <h1>Ask a Question</h1>
+    <form id="questionForm">
+        <label for="question">Your Question:</label><br>
+        <input type="text" id="question" name="question"><br><br>
+        <button type="submit">Ask</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        const form = document.getElementById('questionForm');
+        const responseDiv = document.getElementById('response');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const questionInput = document.getElementById('question').value;
+            const response = await askQuestion(questionInput);
+            responseDiv.innerHTML = ''; // Wyczyść zawartość odpowiedzi przed wyświetleniem nowej odpowiedzi
+            const questionPara = document.createElement('p');
+            questionPara.innerHTML = `<strong>Question:</strong> ${questionInput}`;
+            responseDiv.appendChild(questionPara);
+            const responsePara = document.createElement('p');
+            responsePara.innerHTML = `<strong>Response:</strong> ${response}`;
+            responseDiv.appendChild(responsePara);
+        });
+
+        async function askQuestion(question) {
+            const response = await fetch('/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ question: question })
+            });
+            const data = await response.json();
+            return data.answer; // Zwróć odpowiedź zamiast message
+        }
+    </script>
+</body>
+</html>
