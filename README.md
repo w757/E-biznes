@@ -129,3 +129,13 @@ Demo - https://drive.google.com/file/d/1OHUKpv2Gk-24GGBAmZqowki6zyGTkDBM/view?us
 
 Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%208%20-%20Oauth
 
+
+**Zadanie 9 ChatGPT**
+
+✅ 3.0 
+✅ 3.5 
+
+
+Demo - https://drive.google.com/file/d/1vQnOg_TujfZzxSFdroGzTZdSCD_609na/view?usp=sharing
+
+Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%209%20-%20ChatGPT
