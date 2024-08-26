@@ -139,3 +139,12 @@ Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%208%20-%20Oauth
 Demo - https://drive.google.com/file/d/1vQnOg_TujfZzxSFdroGzTZdSCD_609na/view?usp=sharing
 
 Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%209%20-%20ChatGPT
+
+
+**Zadanie 10 Chmura/CI**
+
+✅ 3.0 
+
+
+Demo - https://drive.google.com/file/d/1O1sd484lVPWAeKFLn4fd7TjQ0CW6udSj/view?usp=drivesdk
+Kod - https://github.com/w757/E-biznes/tree/main/Zadanie%2010%20-%20Chmura
